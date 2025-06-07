@@ -28,28 +28,11 @@ async def calculate_distance_between(
     db: AsyncSession = Depends(get_db)
 ):
     """Calculate distance between two addresses"""
+    logger.info(f"Calculating distance from '{request.source}' to '{request.destination}'")
+
     # Get coordinates for source address
-    source_coords = await get_coordinates(request.source)
-    if not source_coords:
-        raise HTTPException(
-            status_code=422,
-            detail={
-                "code": "ADDRESS_NOT_FOUND",
-                "message": f"Could not find coordinates for source address: {request.source}"
-            }
-        )
-
-    # Get coordinates for destination address
-    dest_coords = await get_coordinates(request.destination)
-    if not dest_coords:
-        raise HTTPException(
-            status_code=422,
-            detail={
-                "code": "ADDRESS_NOT_FOUND",
-                "message": f"Could not find coordinates for destination address: {request.destination}"
-            }
-        )
-
+    source_coords = await get_coordinates(request.source, "source")
+    dest_coords   = await get_coordinates(request.destination, "destination")
     # Calculate distance
     kilometers, miles = calculate_distance(
         source_coords[0], source_coords[1],
@@ -65,6 +48,10 @@ async def calculate_distance_between(
     )
     db.add(query_history)
     await db.commit()
+    logger.info(
+        f"Stored distance calculation: {kilometers:.2f} km / {miles:.2f} miles "
+        f"from '{request.source}' to '{request.destination}'"
+    )
 
-    logger.info(f"Calculated distance: {kilometers:.2f} km / {miles:.2f} miles")
+
     return {"kilometers": kilometers, "miles": miles} 

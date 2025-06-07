@@ -4,6 +4,7 @@ from sqlalchemy import select
 from typing import List
 from pydantic import BaseModel
 from datetime import datetime
+from loguru import logger
 
 from app.db.session import get_db
 from app.db.models import QueryHistory
@@ -30,6 +31,9 @@ async def get_history(
     db: AsyncSession = Depends(get_db)
 ):
     """Get query history"""
+    logger.info(f"Fetching query history with limit {limit}")
+    
+
     query = (
         select(QueryHistory)
         .order_by(QueryHistory.created_at.desc())
@@ -37,4 +41,8 @@ async def get_history(
     )
     
     result = await db.execute(query)
-    return result.scalars().all() 
+    history = result.scalars().all()
+    
+    logger.info(f"Retrieved {len(history)} history records")
+    
+    return history

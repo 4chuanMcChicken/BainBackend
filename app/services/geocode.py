@@ -1,7 +1,7 @@
 from typing import Optional, Tuple
 import httpx
 from loguru import logger
-
+from .exceptions import GeocodingError, AddressNotFoundError
 from app.core.config import settings
 
 
@@ -39,10 +39,12 @@ async def get_coordinates(address: str) -> Optional[Tuple[float, float]]:
             
             if not results:
                 logger.warning(f"No coordinates found for address: {address}")
-                return None
-                
+                raise AddressNotFoundError(address, side="")  
             return float(results[0]["lat"]), float(results[0]["lon"])
+        
+    except AddressNotFoundError:
+        raise
             
     except Exception as e:
-        logger.error(f"Error getting coordinates for {address}: {str(e)}")
-        return None 
+        logger.error(f"Error getting coordinates for {address}: {e}", exc_info=True)
+        raise GeocodingError(address, side="")
