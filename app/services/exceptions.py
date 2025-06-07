@@ -2,12 +2,12 @@
 from fastapi import HTTPException
 
 class GeocodingError(HTTPException):
-    def __init__(self, address: str, side: str):
+    def __init__(self):
         super().__init__(
-            status_code=500,
+            status_code=502,  # Bad Gateway – upstream service error
             detail={
-                "code": "GEOCODING_ERROR",
-                "message": f"Error getting coordinates for {side} address: {address}"
+                "code": "GEOCODING_PROVIDER_ERROR",
+                "message": "The geocoding service is currently unavailable. Please try again later."
             }
         )
 

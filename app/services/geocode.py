@@ -5,7 +5,7 @@ from .exceptions import GeocodingError, AddressNotFoundError
 from app.core.config import settings
 
 
-async def get_coordinates(address: str) -> Optional[Tuple[float, float]]:
+async def get_coordinates(address: str, side: str) -> Optional[Tuple[float, float]]:
     """
     Get coordinates (latitude, longitude) for an address using Nominatim.
     
@@ -39,7 +39,7 @@ async def get_coordinates(address: str) -> Optional[Tuple[float, float]]:
             
             if not results:
                 logger.warning(f"No coordinates found for address: {address}")
-                raise AddressNotFoundError(address, side="")  
+                raise AddressNotFoundError(address, side)  
             return float(results[0]["lat"]), float(results[0]["lon"])
         
     except AddressNotFoundError:
@@ -47,4 +47,4 @@ async def get_coordinates(address: str) -> Optional[Tuple[float, float]]:
             
     except Exception as e:
         logger.error(f"Error getting coordinates for {address}: {e}", exc_info=True)
-        raise GeocodingError(address, side="")
+        raise GeocodingError()
