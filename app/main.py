@@ -8,7 +8,6 @@ from loguru import logger
 from app.core.config import settings
 from app.core.logging import setup_logging
 from app.core.middleware import access_log_middleware
-from app.core.exceptions import format_error_response, format_validation_error
 from app.api import health, distance, history
 
 from app.core.error_handlers import (
