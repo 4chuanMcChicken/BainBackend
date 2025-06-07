@@ -19,7 +19,7 @@ services:
   db:
     image: postgres:16-alpine
     environment:
-      - POSTGRES_USER=postgres
+      - POSTGRES_USER=root
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=distance_calculator
     ports:
