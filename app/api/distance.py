@@ -29,7 +29,6 @@ async def calculate_distance_between(
 ):
     """Calculate distance between two addresses"""
     logger.info(f"Calculating distance from '{request.source}' to '{request.destination}'")
-
     # Get coordinates for source address
     source_coords = await get_coordinates(request.source, "source")
     dest_coords   = await get_coordinates(request.destination, "destination")

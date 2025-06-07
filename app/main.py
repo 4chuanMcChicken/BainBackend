@@ -1,13 +1,22 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.exceptions import RequestValidationError
 from sqlalchemy.exc import SQLAlchemyError
 from loguru import logger
 
 from app.core.config import settings
 from app.core.logging import setup_logging
 from app.core.middleware import access_log_middleware
+from app.core.exceptions import format_error_response, format_validation_error
 from app.api import health, distance, history
+
+from app.core.error_handlers import (
+    http_exception_handler,
+    validation_exception_handler,
+    sqlalchemy_exception_handler,
+    global_exception_handler,
+)
 
 
 # Setup logging
@@ -33,21 +42,13 @@ app.add_middleware(
 # Add access logging middleware
 app.middleware("http")(access_log_middleware)
 
-# Global error handler for database errors
-@app.exception_handler(SQLAlchemyError)
-async def sqlalchemy_exception_handler(request: Request, exc: SQLAlchemyError):
-    """Global handler for database errors"""
-    logger.error(
-        f"Database error occurred during {request.method} {request.url.path}",
-        exc_info=exc
-    )
-    return JSONResponse(
-        status_code=500,
-        content={
-            "code": "INTERNAL_SERVER_ERROR",
-            "message": "An internal error occurred. Please try again later."
-        }
-    )
+# Global exception handlers
+app.add_exception_handler(HTTPException, http_exception_handler)
+app.add_exception_handler(RequestValidationError, validation_exception_handler)
+app.add_exception_handler(SQLAlchemyError, sqlalchemy_exception_handler)
+app.add_exception_handler(Exception, global_exception_handler)
+
+
 
 # Include routers
 app.include_router(health.router, prefix=settings.API_V1_STR)

@@ -1,7 +1,7 @@
 from typing import Optional, Tuple
 import httpx
 from loguru import logger
-from .exceptions import GeocodingError, AddressNotFoundError
+from app.core.exceptions import GeocodingError, AddressNotFoundError
 from app.core.config import settings
 
 
