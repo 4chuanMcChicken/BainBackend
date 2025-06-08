@@ -5,6 +5,7 @@ env_file:
 services:
   api:
     build: .
+    container_name: distance_api
     ports:
       - "8000:8000"
     environment:
@@ -19,21 +20,12 @@ services:
       - PROJECT_NAME=${PROJECT_NAME}
       - RECAPTCHA_SECRET_KEY=${RECAPTCHA_SECRET_KEY}
       - OPENAI_API_KEY=${OPENAI_API_KEY}
-    depends_on:
-      - db
+    # 不再 depends_on db，启动顺序你自己控制就行
+    networks:
+      - proxy-net
     volumes:
       - ./logs:/app/logs
 
-  db:
-    image: postgres:16-alpine
-    environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DB}
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
-volumes:
-  postgres_data: 
+networks:
+  proxy-net:
+    external: true
