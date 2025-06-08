@@ -25,6 +25,9 @@ class Settings(BaseSettings):
     # reCAPTCHA
     RECAPTCHA_SECRET_KEY: str
 
+    # OpenAI
+    OPENAI_API_KEY: str
+
     @field_validator("DATABASE_URL", mode="before")
     def assemble_db_url(cls, v: Optional[str], values) -> str:
         if v:
