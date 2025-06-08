@@ -22,6 +22,9 @@ class Settings(BaseSettings):
     NOMINATIM_USER_AGENT: str = "DistanceCalculator/1.0"
     NOMINATIM_BASE_URL: str = "https://nominatim.openstreetmap.org"
 
+    # reCAPTCHA
+    RECAPTCHA_SECRET_KEY: str
+
     @field_validator("DATABASE_URL", mode="before")
     def assemble_db_url(cls, v: Optional[str], values) -> str:
         if v:
