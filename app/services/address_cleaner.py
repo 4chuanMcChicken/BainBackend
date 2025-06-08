@@ -59,7 +59,11 @@ async def clean_addresses(source: str, destination: str) -> Dict[str, any]:
         Instructions:
         - Strip out any email addresses, postal codes, or other non–place tokens; these removals do **not** count as corrections.
         - Only if you correct an actual typo or replace a wrong place name (e.g. “toooooooronto” → “Toronto”) should you set the corresponding `…Corrected` flag to `true`.
-        - If the original place name is already valid or you’ve only removed extraneous tokens, set the `…Corrected` flags to `false`.
+        - If the original place name is already valid, you’ve only removed extraneous tokens, or you’ve merely adjusted letter casing (e.g. “toronto” → “Toronto”), set the `…Corrected` flags to `false`.
+        - Do **not** set a flag for:
+            • Dropping a zip/postal code
+            • Removing “apt”/“suite” fragments
+            • **Only** normalizing letter casing (e.g. “toronto” → “Toronto”)
         - Return **only** valid JSON, exactly in this format:
 
         {{
