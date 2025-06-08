@@ -1,0 +1,88 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+bin/
+var/
+sdist/
+develop-eggs/
+.installed.cfg
+lib/
+lib64/
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.env.test
+
+# Virtual Environment
+.env
+.venv
+venv/
+ENV/
+env/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+*.sublime-workspace
+*.sublime-project
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Docker
+Dockerfile*
+docker-compose*.yml
+.docker/
+
+# Tests
+tests/
+test_*.py
+*_test.py
+coverage.xml
+.coverage.*
+
+# Documentation
+docs/
+*.md
+LICENSE
+CHANGELOG*
+
+# Development tools
+.editorconfig
+.pre-commit-config.yaml
+mypy.ini
+setup.cfg
+tox.ini
+.pylintrc
+.flake8
+
+# Logs
+logs/
+*.log
+
+# Local development
+.local/
+local_settings.py
+*.sqlite3
+*.db
+
+# Temporary files
+*.bak
+*.tmp
+*~
+.*.sw?
