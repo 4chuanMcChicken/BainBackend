@@ -8,7 +8,7 @@ from app.db.models import QueryHistory
 from app.services.geocode import get_coordinates
 from app.services.address_cleaner import clean_addresses
 from app.core.haversine import calculate_distance
-
+from app.services.recaptcha import verify_recaptcha
 
 router = APIRouter()
 
@@ -16,6 +16,7 @@ router = APIRouter()
 class DistanceRequest(BaseModel):
     source: str = Field(..., min_length=1, max_length=256)
     destination: str = Field(..., min_length=1, max_length=256)
+    captchaToken: str 
 
 
 class DistanceResponse(BaseModel):
@@ -34,6 +35,8 @@ async def calculate_distance_between(
 ):
     """Calculate distance between two addresses"""
     logger.info(f"Calculating distance from '{request.source}' to '{request.destination}'")
+    recaptcha_token=request.captchaToken
+    await verify_recaptcha(recaptcha_token)
 
     # Clean and correct addresses
     cleaned = await clean_addresses(request.source, request.destination)
@@ -45,6 +48,7 @@ async def calculate_distance_between(
         f"Source: '{request.source}' -> '{source}' (corrected: {cleaned['sourceCorrected']}), "
         f"Destination: '{request.destination}' -> '{destination}' (corrected: {cleaned['destinationCorrected']})"
     )
+
 
     # Get coordinates for addresses
     source_coords = await get_coordinates(source, "source")
